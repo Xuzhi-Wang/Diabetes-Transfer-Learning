@@ -1,11 +1,11 @@
 # =========================================================
-# figure3.R
+# Figure3.r
 # Figure 3: relative AUC (vs. target-only baseline) of the pooled
 # and transfer models, for the best source combination per target.
 #
-# Input:  cross_country/output/02_evaluation_results.xlsx
-#         within_hrs/output/02_evaluation_results.xlsx
-# Output: figures/Figure3.pdf, figures/Figure3.png
+# Input:  Cross_Country/output/02_evaluation_results.xlsx
+#         Within-Country_RAND-HRS/output/02_evaluation_results.xlsx
+# Output: Figures/Figure3.pdf, Figures/Figure3.png
 #
 # Run from the repository root.
 # =========================================================
@@ -17,9 +17,9 @@ library(tibble)
 library(ggplot2)
 library(patchwork)
 
-gw_file  <- "cross_country/output/02_evaluation_results.xlsx"
-hrs_file <- "within_hrs/output/02_evaluation_results.xlsx"
-fig_dir  <- "figures"
+gw_file  <- "Cross_Country/output/02_evaluation_results.xlsx"
+hrs_file <- "Within-Country_RAND-HRS/output/02_evaluation_results.xlsx"
+fig_dir  <- "Figures"
 dir.create(fig_dir, showWarnings = FALSE)
 
 
@@ -45,13 +45,13 @@ compute_ratios <- function(best_df, raw_df) {
   map_dfr(seq_len(nrow(best_df)), function(i) {
     tgt   <- best_df$Target[i]
     combo <- best_df$Source_Combination[i]
-    
+
     sub <- raw_df %>%
       filter(Target == tgt, Source_Combination == combo)
-    
+
     pooled_ratio   <- sub$Pooled_AUC   / sub$Baseline_AUC
     transfer_ratio <- sub$Transfer_AUC / sub$Baseline_AUC
-    
+
     tibble(
       Target = tgt, Source_Combination = combo, N_Repeat = nrow(sub),
       Pooled_est   = mean(pooled_ratio),
